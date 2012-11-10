@@ -1,4 +1,4 @@
-package nlp.assignments;
+package nlp.assignment5;
 
 
 import java.util.*;
@@ -632,62 +632,7 @@ public class PCFGParserTester {
   }
 
 
-  public static void main(String[] args) {
-    // Parse command line flags and arguments
-    Map<String, String> argMap = CommandLineUtils.simpleCommandLineParser(args);
-
-    // Set up default parameters and settings
-    String basePath = ".";
-    boolean verbose = true;
-    String testMode = "validate";
-    int maxTrainLength = 1000;
-    int maxTestLength = 40;
-
-    // Update defaults using command line specifications
-    if (argMap.containsKey("-path")) {
-      basePath = argMap.get("-path");
-      System.out.println("Using base path: " + basePath);
-    }
-    if (argMap.containsKey("-test")) {
-      testMode = "test";
-      System.out.println("Testing on final test data.");
-    } else {
-      System.out.println("Testing on validation data.");
-    }
-    if (argMap.containsKey("-maxTrainLength")) {
-      maxTrainLength = Integer.parseInt(argMap.get("-maxTrainLength"));
-    }
-    System.out.println("Maximum length for training sentences: " + maxTrainLength);
-    if (argMap.containsKey("-maxTestLength")) {
-      maxTrainLength = Integer.parseInt(argMap.get("-maxTestLength"));
-    }
-    System.out.println("Maximum length for test sentences: " + maxTestLength);
-    if (argMap.containsKey("-verbose")) {
-      verbose = true;
-    }
-    if (argMap.containsKey("-quiet")) {
-      verbose = false;
-    }
-
-    System.out.print("Loading training trees (sections 2-21) ... ");
-    List<Tree<String>> trainTrees = readTrees(basePath, 200, 2199, maxTrainLength);
-    System.out.println("done. (" + trainTrees.size() + " trees)");
-    List<Tree<String>> testTrees = null;
-    if (testMode.equalsIgnoreCase("validate")) {
-      System.out.print("Loading validation trees (section 22) ... ");
-      testTrees = readTrees(basePath, 2200, 2299, maxTestLength);
-    } else {
-      System.out.print("Loading test trees (section 23) ... ");
-      testTrees = readTrees(basePath, 2300, 2319, maxTestLength);
-    }
-    System.out.println("done. (" + testTrees.size() + " trees)");
-
-    // TODO : Build a better parser!
-    Parser parser = new BaselineParser(trainTrees);
-
-    testParser(parser, testTrees, verbose);
-  }
-
+ 
   private static void testParser(Parser parser, List<Tree<String>> testTrees, boolean verbose) {
     EnglishPennTreebankParseEvaluator.LabeledConstituentEval<String> eval = new EnglishPennTreebankParseEvaluator.LabeledConstituentEval<String>(Collections.singleton("ROOT"), new HashSet<String>(Arrays.asList(new String[]{"''", "``", ".", ":", ","})));
     for (Tree<String> testTree : testTrees) {
@@ -716,4 +661,60 @@ public class PCFGParserTester {
     }
     return normalizedTreeList;
   }
+  public static void main(String[] args) {
+	    // Parse command line flags and arguments
+	    Map<String, String> argMap = CommandLineUtils.simpleCommandLineParser(args);
+
+	    // Set up default parameters and settings
+	    String basePath = ".";
+	    boolean verbose = false;
+	    String testMode = "validate";
+	    int maxTrainLength = 2000;
+	    int maxTestLength = 40;
+
+	    // Update defaults using command line specifications
+	    if (argMap.containsKey("-path")) {
+	      basePath = argMap.get("-path");
+	      System.out.println("Using base path: " + basePath);
+	    }
+	    if (argMap.containsKey("-test")) {
+	      testMode = "test";
+	      System.out.println("Testing on final test data.");
+	    } else {
+	      System.out.println("Testing on validation data.");
+	    }
+	    if (argMap.containsKey("-maxTrainLength")) {
+	      maxTrainLength = Integer.parseInt(argMap.get("-maxTrainLength"));
+	    }
+	    System.out.println("Maximum length for training sentences: " + maxTrainLength);
+	    if (argMap.containsKey("-maxTestLength")) {
+	      maxTrainLength = Integer.parseInt(argMap.get("-maxTestLength"));
+	    }
+	    System.out.println("Maximum length for test sentences: " + maxTestLength);
+	    if (argMap.containsKey("-verbose")) {
+	      verbose = true;
+	    }
+	    if (argMap.containsKey("-quiet")) {
+	      verbose = false;
+	    }
+
+	    System.out.print("Loading training trees (sections 2-21) ... ");
+	    List<Tree<String>> trainTrees = readTrees(basePath, 200, 2199, maxTrainLength);
+	    System.out.println("done. (" + trainTrees.size() + " trees)");
+	    List<Tree<String>> testTrees = null;
+	    if (testMode.equalsIgnoreCase("validate")) {
+	      System.out.print("Loading validation trees (section 22) ... ");
+	      testTrees = readTrees(basePath, 2200, 2299, maxTestLength);
+	    } else {
+	      System.out.print("Loading test trees (section 23) ... ");
+	      testTrees = readTrees(basePath, 2300, 2319, maxTestLength);
+	    }
+	    System.out.println("done. (" + testTrees.size() + " trees)");
+
+	    // TODO : Build a better parser!
+	    Parser parser = new BaselineParser(trainTrees);
+
+	    testParser(parser, testTrees, verbose);
+	  }
+
 }
